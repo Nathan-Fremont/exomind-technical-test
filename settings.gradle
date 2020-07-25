@@ -1,0 +1,2 @@
+rootProject.name='Exomind_Technical_Test'
+include ':app'
