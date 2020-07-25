@@ -28,7 +28,7 @@ class UsersListViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { listUsers ->
-                    postUiData(Either.Left(PageUsersListSuccessUi(listUsers)))
+                    postUiData(Either.Left(PageUsersListSuccessUi((listUsers))))
                 },
                 onError = {
                     postUiData(

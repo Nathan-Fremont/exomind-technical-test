@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,6 +13,7 @@ import com.exomind.technical_test.domain.model.Either
 import com.exomind.technical_test.ui.users_list.view.adapter.UsersListAdapter
 import kotlinx.android.synthetic.main.fragment_users_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class UsersListFragment : Fragment() {
 
@@ -40,14 +40,20 @@ class UsersListFragment : Fragment() {
 
             when (eitherUiData) {
                 is Either.Left -> {
+                    Timber.d("Got users = ${eitherUiData.value.users.size}")
                     usersListAdapter.submitList(eitherUiData.value.users)
                 }
                 is Either.Right -> {
+                    Timber.d("Got error")
                     Toast.makeText(context, eitherUiData.value.error, Toast.LENGTH_SHORT).show()
                 }
             }
         })
 
         viewModel.getUsers()
+
+        fragment_users_list_search_view.setOnSearchClickListener {
+
+        }
     }
 }
