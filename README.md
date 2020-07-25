@@ -1,0 +1,1 @@
+# exomind-technical-test
