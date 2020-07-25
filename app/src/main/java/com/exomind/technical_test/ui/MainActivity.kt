@@ -1,7 +1,8 @@
-package com.exomind.technical_test
+package com.exomind.technical_test.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.exomind.technical_test.R
 
 class MainActivity : AppCompatActivity() {
 
