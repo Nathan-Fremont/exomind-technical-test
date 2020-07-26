@@ -3,14 +3,22 @@ package com.exomind.technical_test.ui.common
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
-abstract class BaseFragment(private val shouldShowBackButton: Boolean): Fragment() {
+abstract class BaseFragment(private val baseFragmentActionBarArgument: BaseFragmentActionBarArgument): Fragment() {
 
     override fun onResume() {
         super.onResume()
 
         (activity as? AppCompatActivity)?.apply {
-            supportActionBar?.setDisplayHomeAsUpEnabled(shouldShowBackButton)
-            supportActionBar?.setDisplayShowHomeEnabled(shouldShowBackButton)
+            if (baseFragmentActionBarArgument.shouldShowActionBar) {
+                supportActionBar?.show()
+
+                supportActionBar?.title = getString(baseFragmentActionBarArgument.actionBarTitle)
+
+                supportActionBar?.setDisplayHomeAsUpEnabled(baseFragmentActionBarArgument.shouldShowBackButton)
+                supportActionBar?.setDisplayShowHomeEnabled(baseFragmentActionBarArgument.shouldShowBackButton)
+            } else {
+                supportActionBar?.hide()
+            }
         }
     }
 }

@@ -12,13 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.exomind.technical_test.R
 import com.exomind.technical_test.domain.model.Either
 import com.exomind.technical_test.ui.common.BaseFragment
+import com.exomind.technical_test.ui.common.BaseFragmentActionBarArgument
 import com.exomind.technical_test.ui.users_list.model.UserUi
 import com.exomind.technical_test.ui.users_list.view.adapter.UsersListAdapter
 import kotlinx.android.synthetic.main.fragment_users_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class UsersListFragment : BaseFragment(false) {
+class UsersListFragment : BaseFragment(
+    BaseFragmentActionBarArgument(
+        R.string.fragment_list_users_title,
+        shouldShowActionBar = true,
+        shouldShowBackButton = false
+    )
+) {
 
     private val viewModel: UsersListViewModel by viewModel()
     private val clickOnHolderCallback: ((userUi: UserUi) -> Unit) = { selectedUserUi ->

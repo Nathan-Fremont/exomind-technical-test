@@ -15,11 +15,18 @@ import com.exomind.technical_test.domain.model.Either
 import com.exomind.technical_test.ui.albums_list.model.AlbumUi
 import com.exomind.technical_test.ui.albums_list.view.adapter.AlbumsListAdapter
 import com.exomind.technical_test.ui.common.BaseFragment
+import com.exomind.technical_test.ui.common.BaseFragmentActionBarArgument
 import kotlinx.android.synthetic.main.fragment_albums_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class AlbumsListFragment : BaseFragment(true) {
+class AlbumsListFragment : BaseFragment(
+    BaseFragmentActionBarArgument(
+        R.string.fragment_list_albums_title,
+        shouldShowActionBar = true,
+        shouldShowBackButton = true
+    )
+) {
 
     private val albumsViewModel: AlbumsListViewModel by viewModel()
     private val navArgs: AlbumsListFragmentArgs by navArgs()
