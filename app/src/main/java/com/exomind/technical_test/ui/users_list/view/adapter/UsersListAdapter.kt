@@ -7,16 +7,20 @@ import androidx.recyclerview.widget.ListAdapter
 import com.exomind.technical_test.R
 import com.exomind.technical_test.ui.users_list.model.UserUi
 import com.exomind.technical_test.ui.users_list.view.UsersListViewHolder
-import timber.log.Timber
 
-class UsersListAdapter : ListAdapter<UserUi, UsersListViewHolder>(diffCallback) {
+class UsersListAdapter(private val clickOnHolderCallback: (userUi: UserUi) -> Unit) : ListAdapter<UserUi, UsersListViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersListViewHolder {
         val view =
             LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.holder_users_list, parent, false)
-        val holder = UsersListViewHolder(view)
+        val holder = UsersListViewHolder(view).apply {
+            itemView.setOnClickListener {
+                val selectedUserUi = getItem(adapterPosition)
+                clickOnHolderCallback(selectedUserUi)
+            }
+        }
         return holder
     }
 
