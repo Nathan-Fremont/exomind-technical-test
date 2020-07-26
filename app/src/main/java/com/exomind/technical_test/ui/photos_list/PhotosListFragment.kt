@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.exomind.technical_test.R
 import com.exomind.technical_test.domain.model.Either
@@ -42,7 +43,7 @@ class PhotosListFragment : BaseFragment(
 
         Timber.d("Will show photos for album ${navArgs.selectedAlbumUi.title} [${navArgs.selectedAlbumUi.id}]")
         fragment_photos_list_recycler_view.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
             adapter = photosListAdapter
         }
 
