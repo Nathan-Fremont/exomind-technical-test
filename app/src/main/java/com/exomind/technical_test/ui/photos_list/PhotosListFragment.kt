@@ -11,12 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.exomind.technical_test.R
 import com.exomind.technical_test.domain.model.Either
 import com.exomind.technical_test.ui.common.BaseFragment
+import com.exomind.technical_test.ui.common.BaseFragmentActionBarArgument
 import com.exomind.technical_test.ui.photos_list.view.adapter.PhotosListAdapter
 import kotlinx.android.synthetic.main.fragment_photos_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class PhotosListFragment : BaseFragment(true) {
+class PhotosListFragment : BaseFragment(
+    BaseFragmentActionBarArgument(
+        R.string.fragment_list_photos_title,
+        shouldShowActionBar = true,
+        shouldShowBackButton = true
+    )
+) {
 
     private val photosListViewModel: PhotosListViewModel by viewModel()
     private val navArgs: PhotosListFragmentArgs by navArgs()

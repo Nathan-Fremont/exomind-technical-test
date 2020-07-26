@@ -5,5 +5,12 @@
     <string name="common_error_no_connection">Une erreur est survenue, veuillez réessayer.</string>
     
     <!-- FRAGMENT_LIST_USERS -->
+    <string name="fragment_list_users_title">Utilisateurs</string>
     <string name="fragment_list_users_error_no_user_found">Aucun utilisateur trouvé pour le nom cherché.</string>
+
+    <!-- FRAGMENT_LIST_ALBUMS -->
+    <string name="fragment_list_albums_title">Albums</string>
+
+    <!-- FRAGMENT_LIST_PHOTOS -->
+    <string name="fragment_list_photos_title">Photos</string>
 </resources>
