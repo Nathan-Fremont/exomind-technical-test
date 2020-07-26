@@ -1,5 +1,6 @@
 package com.exomind.technical_test.ui.users_list.model
 
 data class PageUsersListSuccessUi(
-    val users: List<UserUi>
+    val users: List<UserUi>,
+    val message: Int? = null
 )

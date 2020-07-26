@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -42,6 +43,11 @@ class UsersListFragment : Fragment() {
                 is Either.Left -> {
                     Timber.d("Got users = ${eitherUiData.value.users.size}")
                     usersListAdapter.submitList(eitherUiData.value.users)
+
+                    if (eitherUiData.value.message != null) {
+                        Toast.makeText(context, eitherUiData.value.message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
                 is Either.Right -> {
                     Timber.d("Got error")
@@ -52,8 +58,24 @@ class UsersListFragment : Fragment() {
 
         viewModel.getUsers()
 
-        fragment_users_list_search_view.setOnSearchClickListener {
+        fragment_users_list_search_view.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Timber.d("onQueryTextSubmit Search user with name $query")
+                viewModel.searchUserByName(query!!)
+                return false
+            }
 
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+
+        fragment_users_list_search_view.setOnCloseListener {
+            Timber.d("onCloseListener Get all users")
+            viewModel.getUsers()
+            false
         }
     }
 }

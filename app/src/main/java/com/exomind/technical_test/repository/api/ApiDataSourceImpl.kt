@@ -10,6 +10,10 @@ class ApiDataSourceImpl(
 ) : ApiDataSource {
 
     override fun getUsersList(): Single<List<UserApi>> {
-        return apiService.getUsersList();
+        return apiService.getUsersList()
+    }
+
+    override fun searchUserByName(username: String): Single<List<UserApi>> {
+        return apiService.searchUserByName(username)
     }
 }

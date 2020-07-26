@@ -5,4 +5,5 @@ import io.reactivex.Single
 
 interface Repository {
     fun getUsersList(): Single<List<User>>
+    fun searchUserByName(username: String): Single<List<User>>
 }

@@ -48,4 +48,13 @@ class RepositoryImpl(
             Single.just(usersFromCache)
         }
     }
+
+    override fun searchUserByName(username: String): Single<List<User>> {
+        return apiDataSource.searchUserByName(username)
+            .map { usersListApi ->
+                usersListApi.map { userApi ->
+                    userMapper.toDomain(userApi)
+                }
+            }
+    }
 }
