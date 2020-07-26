@@ -5,4 +5,5 @@ import io.reactivex.Single
 
 interface ApiDataSource {
     fun getUsersList(): Single<List<UserApi>>
+    fun searchUserByName(username: String): Single<List<UserApi>>
 }
