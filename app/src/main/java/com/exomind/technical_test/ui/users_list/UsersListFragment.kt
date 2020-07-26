@@ -6,20 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.exomind.technical_test.R
 import com.exomind.technical_test.domain.model.Either
+import com.exomind.technical_test.ui.common.BaseFragment
+import com.exomind.technical_test.ui.users_list.model.UserUi
 import com.exomind.technical_test.ui.users_list.view.adapter.UsersListAdapter
 import kotlinx.android.synthetic.main.fragment_users_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class UsersListFragment : Fragment() {
+class UsersListFragment : BaseFragment(false) {
 
     private val viewModel: UsersListViewModel by viewModel()
-    private val usersListAdapter: UsersListAdapter by lazy { UsersListAdapter() }
+    private val clickOnHolderCallback: ((userUi: UserUi) -> Unit) = { selectedUserUi ->
+        val action =
+            UsersListFragmentDirections.actionUsersListFragmentToAlbumsListFragment(selectedUserUi)
+        findNavController().navigate(action)
+    }
+
+    private val usersListAdapter: UsersListAdapter by lazy { UsersListAdapter(clickOnHolderCallback) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

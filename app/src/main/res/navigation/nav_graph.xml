@@ -8,6 +8,20 @@
         android:id="@+id/usersListFragment"
         android:name="com.exomind.technical_test.ui.users_list.UsersListFragment"
         android:label="UsersListFragment"
-        tools:layout="@layout/fragment_users_list" />
+        tools:layout="@layout/fragment_users_list" >
+        <action
+            android:id="@+id/action_usersListFragment_to_albumsListFragment"
+            app:destination="@id/albumsListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumsListFragment"
+        android:name="com.exomind.technical_test.ui.albums_list.AlbumsListFragment"
+        android:label="AlbumsListFragment"
+        tools:layout="@layout/fragment_albums_list">
+        <argument
+            android:name="selectedUserUi"
+            app:argType="com.exomind.technical_test.ui.users_list.model.UserUi" />
+    </fragment>
 
 </navigation>

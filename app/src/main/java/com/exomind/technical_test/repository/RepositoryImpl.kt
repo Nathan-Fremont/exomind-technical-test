@@ -1,8 +1,10 @@
 package com.exomind.technical_test.repository
 
 import com.exomind.technical_test.domain.Repository
+import com.exomind.technical_test.domain.model.Album
 import com.exomind.technical_test.domain.model.User
 import com.exomind.technical_test.repository.local.room.RoomDataSource
+import com.exomind.technical_test.repository.mapper.AlbumMapper
 import com.exomind.technical_test.repository.mapper.UserMapper
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -11,7 +13,8 @@ import timber.log.Timber
 class RepositoryImpl(
     private val apiDataSource: ApiDataSource,
     private val localDataSource: RoomDataSource,
-    private val userMapper: UserMapper
+    private val userMapper: UserMapper,
+    private val albumMapper: AlbumMapper
 ) : Repository {
 
     private fun getUsersFromCache(): Single<List<User>> {
@@ -54,6 +57,15 @@ class RepositoryImpl(
             .map { usersListApi ->
                 usersListApi.map { userApi ->
                     userMapper.toDomain(userApi)
+                }
+            }
+    }
+
+    override fun getAlbumsForUser(userId: Int): Single<List<Album>> {
+        return apiDataSource.getAlbumsForUser(userId)
+            .map { albumsListApi ->
+                albumsListApi.map { albumApi ->
+                    albumMapper.toDomain(albumApi)
                 }
             }
     }
