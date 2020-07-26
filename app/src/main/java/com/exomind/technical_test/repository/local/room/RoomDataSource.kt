@@ -7,14 +7,16 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.exomind.technical_test.domain.model.Album
+import com.exomind.technical_test.domain.model.Photo
 import com.exomind.technical_test.domain.model.User
 import com.exomind.technical_test.repository.local.AlbumDao
 import com.exomind.technical_test.repository.local.UserDao
 
-@Database(entities = [User::class, Album::class], version = 2)
+@Database(entities = [User::class, Album::class, Photo::class], version = 3)
 abstract class RoomDataSource : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun albumDao(): AlbumDao
+    abstract fun photoDao(): PhotoDao
 
     companion object {
         private const val DATABASE_NAME = "EXOMIND_ROOM_DATABASE"
@@ -27,13 +29,22 @@ abstract class RoomDataSource : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE `Photo` (`id` INTEGER NOT NULL , `album_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `url` TEXT NOT NULL, `thumbnail_url` TEXT NOT NULL, PRIMARY KEY(`id`))"
+
+                )
+            }
+        }
+
         fun buildDatabase(context: Context): RoomDataSource {
             return Room.databaseBuilder(
                 context,
                 RoomDataSource::class.java,
                 DATABASE_NAME
             )
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .fallbackToDestructiveMigration()
                 .build()
         }

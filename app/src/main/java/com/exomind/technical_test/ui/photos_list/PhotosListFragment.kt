@@ -43,6 +43,7 @@ class PhotosListFragment : BaseFragment(true) {
 
             when (eitherUiPageData) {
                 is Either.Left -> {
+                    Timber.d("Got ${eitherUiPageData.value.photos.size} photos for the selected album ${navArgs.selectedAlbumUi.id}")
                     photosListAdapter.submitList(eitherUiPageData.value.photos)
                 }
 

@@ -101,19 +101,44 @@ class RepositoryImpl(
         }
     }
 
-    override fun getPhotosForAlbum(userId: Int, albumId: Int): Single<List<Photo>> {
+    private fun getPhotosFromCacheForAlbum(albumId: Int): Single<List<Photo>> {
+        return localDataSource
+            .photoDao()
+            .getAllPhotosForAlbum(albumId)
+    }
+
+    private fun getPhotosFromRemoteForUser(userId: Int, albumId: Int): Single<List<Photo>> {
         return apiDataSource.getPhotosForUser(userId)
             .map { photosListApi ->
                 photosListApi.map { photoApi ->
                     photoMapper.toDomain(photoApi)
                 }
             }
-            .flatMap { photosList ->
-                Single.just(
-                    photosList.filter { photo ->
-                        photo.albumId == albumId
-                    }
-                )
+            .subscribeOn(Schedulers.computation())
+            .doAfterSuccess {  photos ->
+                Timber.d("Will put ${photos.size} photos into local database")
+                localDataSource.photoDao().insertPhotos(*photos.toTypedArray())
             }
+            .map { photosList ->
+                val photos = photosList.filter { photo ->
+                    photo.albumId == albumId
+                }
+                Timber.d("Got ${photos.size} filtered photos")
+                photos
+            }
+    }
+
+    override fun getPhotosForAlbum(userId: Int, albumId: Int): Single<List<Photo>> {
+        val localPhotos = getPhotosFromCacheForAlbum(albumId)
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+
+        return if (localPhotos.isEmpty()) {
+            Timber.d("No photos in cache, will get them from remote")
+            getPhotosFromRemoteForUser(userId, albumId)
+        } else {
+            Timber.d("Got photos in cache")
+            Single.just(localPhotos)
+        }
     }
 }
