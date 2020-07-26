@@ -34,7 +34,7 @@ class RepositoryImpl(
             }
             .subscribeOn(Schedulers.computation())
             .doAfterSuccess { users ->
-                Timber.d("Will put ${users.size} into local database")
+                Timber.d("Will put ${users.size} users into local database")
                 localDataSource.userDao().insertUsers(*users.toTypedArray())
             }
     }
@@ -64,13 +64,41 @@ class RepositoryImpl(
             }
     }
 
-    override fun getAlbumsForUser(userId: Int): Single<List<Album>> {
-        return apiDataSource.getAlbumsForUser(userId)
+    private fun getAlbumsFromCacheForUserId(userId: Int): Single<List<Album>> {
+        return localDataSource
+            .albumDao()
+            .getAlbumsForUser(userId)
+    }
+
+    private fun getAlbumsFromRemoteForUserId(userId: Int): Single<List<Album>> {
+        return apiDataSource
+            .getAlbumsForUser(userId)
             .map { albumsListApi ->
                 albumsListApi.map { albumApi ->
                     albumMapper.toDomain(albumApi)
                 }
             }
+            .subscribeOn(Schedulers.computation())
+            .doAfterSuccess { albums ->
+                Timber.d("Will put ${albums.size} albums into local database")
+                localDataSource.albumDao().insertAlbums(*albums.toTypedArray())
+            }
+    }
+
+    override fun getAlbumsForUser(userId: Int): Single<List<Album>> {
+        Timber.d("getAlbumsForUser $userId")
+
+        val albumsFromCache = getAlbumsFromCacheForUserId(userId)
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+
+        return if (albumsFromCache.isEmpty()) {
+            Timber.d("No albums in cache, will get them from remote")
+            getAlbumsFromRemoteForUserId(userId)
+        } else {
+            Timber.d("Got albums in cache")
+            Single.just(albumsFromCache)
+        }
     }
 
     override fun getPhotosForAlbum(userId: Int, albumId: Int): Single<List<Photo>> {
