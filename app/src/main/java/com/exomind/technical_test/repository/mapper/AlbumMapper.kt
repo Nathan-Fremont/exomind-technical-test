@@ -7,6 +7,7 @@ class AlbumMapper : BaseDomainMapper<AlbumApi, Album>() {
     override fun toDomain(api: AlbumApi): Album {
         return Album(
             api.id,
+            api.userId,
             api.title
         )
     }
