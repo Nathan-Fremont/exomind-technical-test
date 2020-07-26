@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.exomind.technical_test.R
 import com.exomind.technical_test.domain.model.Either
+import com.exomind.technical_test.ui.albums_list.model.AlbumUi
 import com.exomind.technical_test.ui.albums_list.view.adapter.AlbumsListAdapter
 import com.exomind.technical_test.ui.common.BaseFragment
 import kotlinx.android.synthetic.main.fragment_albums_list.*
@@ -22,7 +23,14 @@ class AlbumsListFragment : BaseFragment(true) {
 
     private val albumsViewModel: AlbumsListViewModel by viewModel()
     private val navArgs: AlbumsListFragmentArgs by navArgs()
-    private val albumsListAdapter: AlbumsListAdapter by lazy { AlbumsListAdapter() }
+    private val clickOnAlbumHolder: ((albumUi: AlbumUi) -> Unit) = { selectedAlbumUi ->
+        val action = AlbumsListFragmentDirections.actionAlbumsListFragmentToPhotosListFragment(
+            selectedAlbumUi
+        )
+        findNavController().navigate(action)
+    }
+
+    private val albumsListAdapter: AlbumsListAdapter by lazy { AlbumsListAdapter(clickOnAlbumHolder) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

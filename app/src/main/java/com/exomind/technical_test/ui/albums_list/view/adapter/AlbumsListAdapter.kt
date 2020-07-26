@@ -8,14 +8,19 @@ import com.exomind.technical_test.R
 import com.exomind.technical_test.ui.albums_list.model.AlbumUi
 import com.exomind.technical_test.ui.albums_list.view.AlbumsListViewHolder
 
-class AlbumsListAdapter : ListAdapter<AlbumUi, AlbumsListViewHolder>(diffCallback) {
+class AlbumsListAdapter(private val clickOnAlbumHolder: (albumUi: AlbumUi) -> Unit) : ListAdapter<AlbumUi, AlbumsListViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumsListViewHolder {
         val view = LayoutInflater
             .from(parent.context)
             .inflate(R.layout.holder_albums_list, parent, false)
 
-        val holder = AlbumsListViewHolder(view)
+        val holder = AlbumsListViewHolder(view).apply {
+            itemView.setOnClickListener {
+                val albumUi = getItem(adapterPosition)
+                clickOnAlbumHolder(albumUi)
+            }
+        }
         return holder
     }
 

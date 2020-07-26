@@ -7,6 +7,7 @@ import com.exomind.technical_test.repository.api.ApiDataSourceImpl
 import com.exomind.technical_test.repository.api.retrofit.ApiRetrofitFactory
 import com.exomind.technical_test.repository.local.room.RoomDataSource
 import com.exomind.technical_test.repository.mapper.AlbumMapper
+import com.exomind.technical_test.repository.mapper.PhotoMapper
 import com.exomind.technical_test.repository.mapper.UserMapper
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -39,7 +40,8 @@ val repositoryModule = module {
             apiDataSource = get(),
             localDataSource = get(),
             userMapper = get(),
-            albumMapper = get()
+            albumMapper = get(),
+            photoMapper = get()
         ) as Repository
     }
 }
@@ -50,6 +52,9 @@ val repositoryMapperModule = module {
     }
     single {
         AlbumMapper()
+    }
+    single {
+        PhotoMapper()
     }
 }
 
