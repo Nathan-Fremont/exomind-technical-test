@@ -2,9 +2,11 @@ package com.exomind.technical_test.repository
 
 import com.exomind.technical_test.domain.Repository
 import com.exomind.technical_test.domain.model.Album
+import com.exomind.technical_test.domain.model.Photo
 import com.exomind.technical_test.domain.model.User
 import com.exomind.technical_test.repository.local.room.RoomDataSource
 import com.exomind.technical_test.repository.mapper.AlbumMapper
+import com.exomind.technical_test.repository.mapper.PhotoMapper
 import com.exomind.technical_test.repository.mapper.UserMapper
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -14,7 +16,8 @@ class RepositoryImpl(
     private val apiDataSource: ApiDataSource,
     private val localDataSource: RoomDataSource,
     private val userMapper: UserMapper,
-    private val albumMapper: AlbumMapper
+    private val albumMapper: AlbumMapper,
+    private val photoMapper: PhotoMapper
 ) : Repository {
 
     private fun getUsersFromCache(): Single<List<User>> {
@@ -67,6 +70,22 @@ class RepositoryImpl(
                 albumsListApi.map { albumApi ->
                     albumMapper.toDomain(albumApi)
                 }
+            }
+    }
+
+    override fun getPhotosForAlbum(userId: Int, albumId: Int): Single<List<Photo>> {
+        return apiDataSource.getPhotosForUser(userId)
+            .map { photosListApi ->
+                photosListApi.map { photoApi ->
+                    photoMapper.toDomain(photoApi)
+                }
+            }
+            .flatMap { photosList ->
+                Single.just(
+                    photosList.filter { photo ->
+                        photo.albumId == albumId
+                    }
+                )
             }
     }
 }
