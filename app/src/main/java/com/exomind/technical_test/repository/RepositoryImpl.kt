@@ -41,8 +41,10 @@ class RepositoryImpl(
             .blockingGet()
 
         return if (usersFromCache.isEmpty()) {
+            Timber.d("No users in cache, will get them from remote")
             getUsersFromRemote()
         } else {
+            Timber.d("Got users in cache")
             Single.just(usersFromCache)
         }
     }

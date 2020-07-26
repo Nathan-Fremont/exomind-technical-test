@@ -12,8 +12,8 @@ import org.koin.dsl.module
 
 val apiRetrofitModule = module {
     single {
-        ApiRetrofitFactory(androidContext()).buildApiService(
-            ApiRetrofitFactory(androidContext()).buildApiRetrofit()
+        ApiRetrofitFactory().buildApiService(
+            ApiRetrofitFactory().buildApiRetrofit()
         )
     }
 }

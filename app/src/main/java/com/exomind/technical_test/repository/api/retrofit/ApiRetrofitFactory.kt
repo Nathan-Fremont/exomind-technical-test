@@ -1,6 +1,5 @@
 package com.exomind.technical_test.repository.api.retrofit
 
-import android.content.Context
 import com.exomind.technical_test.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -12,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class ApiRetrofitFactory(private val context: Context) {
+class ApiRetrofitFactory {
     fun buildApiRetrofit(): Retrofit {
         return Retrofit.Builder()
             .client(buildHttpClient())
