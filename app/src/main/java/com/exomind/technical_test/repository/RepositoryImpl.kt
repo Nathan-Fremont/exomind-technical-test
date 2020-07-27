@@ -42,16 +42,28 @@ class RepositoryImpl(
     override fun getUsersList(): Single<List<User>> {
         Timber.d("getUsersList")
 
-        val usersFromCache = getUsersFromCache()
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
+        try {
+            val usersFromRemote = getUsersFromRemote()
+                .subscribeOn(Schedulers.io())
+                .blockingGet()
 
-        return if (usersFromCache.isEmpty()) {
-            Timber.d("No users in cache, will get them from remote")
-            getUsersFromRemote()
-        } else {
-            Timber.d("Got users in cache")
-            Single.just(usersFromCache)
+            Timber.d("Got users in remote")
+            return Single.just(usersFromRemote)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Timber.d("An error occured during API call, will try to get users in cache")
+
+            val usersFromCache = getUsersFromCache()
+                .subscribeOn(Schedulers.io())
+                .blockingGet()
+
+            return if (usersFromCache.isNotEmpty()) {
+                Single.just(usersFromCache)
+            } else {
+                Single.error(
+                    e
+                )
+            }
         }
     }
 
@@ -115,7 +127,7 @@ class RepositoryImpl(
                 }
             }
             .subscribeOn(Schedulers.computation())
-            .doAfterSuccess {  photos ->
+            .doAfterSuccess { photos ->
                 Timber.d("Will put ${photos.size} photos into local database")
                 localDataSource.photoDao().insertPhotos(*photos.toTypedArray())
             }
