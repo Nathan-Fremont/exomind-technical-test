@@ -2,4 +2,6 @@
 <resources>
     <dimen name="spacing_value">8dp</dimen>
 
+    <!-- HOLDER_PHOTOS_LIST -->
+    <dimen name="holder_photos_list_image_size_min_width">150dp</dimen>
 </resources>
